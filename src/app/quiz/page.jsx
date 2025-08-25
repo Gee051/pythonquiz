@@ -3,32 +3,38 @@ import { useEffect, useMemo, useState } from 'react';
 
 // ================= QUESTIONS =================
 const QUESTIONS = [
-  { id: 1,  prompt: 'Which function prints text to the console in Python?', options: ['echo("Hi")', 'print("Hi")', 'Console.log("Hi")', 'out("Hi")'], correctIndex: 1 },
-  { id: 2,  prompt: 'Which variable name is valid in Python?', options: ['2name', 'first-name', 'first_name', 'first name'], correctIndex: 2 },
-  { id: 3,  prompt: 'What type is the value "42" (with quotes)?', options: ['int', 'float', 'str', 'bool'], correctIndex: 2 },
-  { id: 4,  prompt: 'In Python 3, what is the result of 3 / 2?', options: ['1', '1.5', '1.0', '2'], correctIndex: 1 },
-  { id: 5,  prompt: 'What is the result of 7 // 2?', options: ['3.5', '3', '4', 'Error'], correctIndex: 1 },
-  { id: 6,  prompt: 'How do you write a single-line comment in Python?', options: ['// comment', '# comment', '<!-- comment -->', '/* comment */'], correctIndex: 1 },
-  { id: 7,  prompt: 'Which converts the string "12.5" to a float?', options: ['int("12.5")', 'float("12.5")', 'str(12.5)', 'toFloat("12.5")'], correctIndex: 1 },
-  { id: 8,  prompt: 'Which converts the integer 12 to a string?', options: ['string(12)', 'str(12)', 'to_string(12)', 'text(12)'], correctIndex: 1 },
-  { id: 9,  prompt: 'Which is another programming language besides Python?', options: ['HTML', 'Java', 'CSS', 'SQL'], correctIndex: 1 },
-  { id: 10, prompt: 'What symbol is used for modulus in Python?', options: ['%', '//', '/', 'mod'], correctIndex: 0 },
-  { id: 11, prompt: 'What does 10 % 3 evaluate to?', options: ['3', '1', '0', 'Error'], correctIndex: 1 },
-  { id: 12, prompt: 'Which is a syntax error?', options: ['print("Hello")', 'if 5 > 3 print("Yes")', 'x = 10', 'name = "John"'], correctIndex: 1 },
-  { id: 13, prompt: 'Which is a runtime error?', options: ['x = 10 / 0', 'print("Hello")', 'y = 5 + 3', 'age = 20'], correctIndex: 0 },
-  { id: 14, prompt: 'Which is a logical error?', options: ['Using wrong formula but no crash', 'Misspelling print', 'Missing colon in if', 'Unclosed string'], correctIndex: 0 },
-  { id: 15, prompt: 'Which method makes a string uppercase?', options: ['toUpper()', 'upper()', 'uppercase()', 'capitalizeAll()'], correctIndex: 1 },
-  { id: 16, prompt: 'Which removes leading and trailing whitespace from a string `s`?', options: ['trim(s)', 's.strip()', 's.clean()', 's.chomp()'], correctIndex: 1 },
-  { id: 17, prompt: 'What keyword is used to define a function in Python?', options: ['func', 'def', 'function', 'define'], correctIndex: 1 },
-  { id: 18, prompt: 'Which operator is used for exponentiation (power) in Python?', options: ['^', '**', 'pow', 'exp'], correctIndex: 1 },
-  { id: 19, prompt: 'Which data type would be best for storing a whole number?', options: ['int', 'float', 'str', 'bool'], correctIndex: 0 },
-  { id: 20, prompt: 'Which data type would be best for storing decimal numbers?', options: ['int', 'float', 'str', 'bool'], correctIndex: 1 },
-  { id: 21, prompt: 'What is the output of: print(type(3.0))?', options: ['<class "int">', '<class "float">', '<class "str">', '<class "bool">'], correctIndex: 1 },
-  { id: 22, prompt: 'Which symbol is used for single-line assignment in Python?', options: ['=', '==', ':=', '=>'], correctIndex: 0 },
-  { id: 23, prompt: 'Which comparison operator checks for equality?', options: ['=', '==', '!=', '<>'], correctIndex: 1 },
-  { id: 24, prompt: 'Which boolean value does bool(0) return?', options: ['True', 'False', 'None', 'Error'], correctIndex: 1 },
-  { id: 25, prompt: 'What will print("Hello" + "World") output?', options: ['Hello World', 'HelloWorld', 'Hello+World', 'Error'], correctIndex: 1 },
+  { id: 1,  prompt: 'Which literal creates a list of names?', options: ['(\'Idunnu\', \'Grace\')', '[\'Idunnu\', \'Grace\']', '{\'Idunnu\', \'Grace\'}', '<Idunnu, Grace>'], correctIndex: 1 },
+  { id: 2,  prompt: 'Which literal creates a tuple?', options: ['[1, 2, 3]', '(1, 2, 3)', '{1, 2, 3}', 'tuple[1,2,3]'], correctIndex: 1 },
+  { id: 3,  prompt: 'Which literal creates a set with unique names?', options: ['{"Grace", "Idunnu"}', '["Grace", "Idunnu"]', '("Grace", "Idunnu")', '{"Grace": "Idunnu"}'], correctIndex: 0 },
+  { id: 4,  prompt: 'Which creates a dictionary mapping Grace → 25?', options: ['{"Grace": 25}', '["Grace"=25]', '(Grace:25)', '{25: "Grace"}'], correctIndex: 0 },
+  { id: 5,  prompt: 'Which data type is immutable?', options: ['list', 'set', 'tuple', 'dict'], correctIndex: 2 },
+  { id: 6,  prompt: 'Which method adds an item to the end of a list?', options: ['add()', 'push()', 'append()', 'insert()'], correctIndex: 2 },
+  { id: 7,  prompt: 'Which method removes and returns the last item of a list?', options: ['remove()', 'pop()', 'delete()', 'discard()'], correctIndex: 1 },
+  { id: 8,  prompt: 'Which operator checks if a key exists in a dictionary?', options: ['has', 'in', 'exists', 'contains'], correctIndex: 1 },
+  { id: 9,  prompt: 'Which keyword starts a conditional block?', options: ['if', 'when', 'then', 'cond'], correctIndex: 0 },
+  { id: 10, prompt: 'Fill in: if age >= 18: print("Adult") ____: print("Minor")', options: ['elseif', 'elif', 'else', 'then'], correctIndex: 2 },
+  { id: 11, prompt: 'Which is correct syntax for elif?', options: ['elseif', 'elif', 'else if', 'elsif'], correctIndex: 1 },
+  { id: 12, prompt: 'Given x=5, what will this run? if x==5: print("Yes") else: print("No")', options: ['Yes', 'No', 'Error', 'True'], correctIndex: 0 },
+  { id: 13, prompt: 'What is wrong with: if x > 10 print("Big")', options: ['Missing colon', 'Extra colon', 'Wrong keyword', 'Nothing'], correctIndex: 0 },
+  { id: 14, prompt: 'Which operator checks equality?', options: ['=', '==', '!=', '<>'], correctIndex: 1 },
+  { id: 15, prompt: 'Inequality operator in Python is:', options: ['<>', '!=', '!==', '≠'], correctIndex: 1 },
+  { id: 16, prompt: 'Which keyword exits a loop immediately?', options: ['stop', 'end', 'break', 'exit'], correctIndex: 2 },
+  { id: 17, prompt: 'Which keyword skips to the next loop iteration?', options: ['skip', 'continue', 'pass', 'next'], correctIndex: 1 },
+  { id: 18, prompt: 'Which keyword does nothing and acts as a placeholder?', options: ['null', 'pass', 'skip', 'continue'], correctIndex: 1 },
+  { id: 19, prompt: 'Convert the string "123" into an integer:', options: ['str("123")', 'int("123")', 'float("123")', 'bool("123")'], correctIndex: 1 },
+  { id: 20, prompt: 'Convert 99 into a string:', options: ['toString(99)', 'str(99)', 'string(99)', 'text(99)'], correctIndex: 1 },
+  { id: 21, prompt: 'What will bool("") return?', options: ['True', 'False', 'None', 'Error'], correctIndex: 1 },
+  { id: 22, prompt: 'What will bool([1,2,3]) return?', options: ['True', 'False', 'Error', 'None'], correctIndex: 0 },
+  { id: 23, prompt: 'Which error occurs if you divide by zero?', options: ['SyntaxError', 'ZeroDivisionError', 'TypeError', 'NameError'], correctIndex: 1 },
+  { id: 24, prompt: 'Which error occurs if you use a variable before defining it?', options: ['NameError', 'ValueError', 'TypeError', 'IndexError'], correctIndex: 0 },
+  { id: 25, prompt: 'Which error occurs if you access nums[10] when nums=[1,2,3]?', options: ['IndexError', 'KeyError', 'ValueError', 'NameError'], correctIndex: 0 },
+  { id: 26, prompt: 'Which error occurs if you run int("abc")?', options: ['SyntaxError', 'ValueError', 'TypeError', 'NameError'], correctIndex: 1 },
+  { id: 27, prompt: 'Which operation raises TypeError?', options: ['"3" + 3', '3 * "3"', '"a" in "grace"', '3 ** 2'], correctIndex: 0 },
+  { id: 28, prompt: 'names = ["Grace","Idunnu","Grace"]; names.count("Grace") returns:', options: ['0', '1', '2', 'Error'], correctIndex: 2 },
+  { id: 29, prompt: 'Make a 1-element tuple containing 5:', options: ['(5)', '(5,)', '[5]', '{5}'], correctIndex: 1 },
+  { id: 30, prompt: 'What is the output? x=-1; if x>0: print("Positive") elif x==0: print("Zero") else: print("Negative")', options: ['Positive', 'Zero', 'Negative', 'Error'], correctIndex: 2 },
 ];
+
 
 
 // ================= COMPONENT =================
@@ -45,7 +51,7 @@ export default function QuizPage() {
   // timer
   useEffect(() => {
     if (phase !== 'play') return;
-    const t = setInterval(() => setNow(Date.now()), 1000);
+    const t = setInterval(() => setNow(Date.now()), 1500);
     return () => clearInterval(t);
   }, [phase]);
 
