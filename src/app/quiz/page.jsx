@@ -51,13 +51,13 @@ export default function QuizPage() {
   // timer
   useEffect(() => {
     if (phase !== 'play') return;
-    const t = setInterval(() => setNow(Date.now()), 1500);
+    const t = setInterval(() => setNow(Date.now()), 2000);
     return () => clearInterval(t);
   }, [phase]);
 
   const remaining = useMemo(() => {
     if (!startedAt) return durationSec;
-    const elapsed = Math.floor((now - startedAt) / 1000);
+    const elapsed = Math.floor((now - startedAt) / 2000);
     return Math.max(0, durationSec - elapsed);
   }, [now, startedAt]);
 
@@ -111,7 +111,7 @@ export default function QuizPage() {
           <main className="bg-[#121833] border border-indigo-900/50 rounded-2xl p-6">
             <h2 className="text-xl font-semibold">Welcome</h2>
             <p className="text-indigo-200/80 mt-2">
-              25 questions. You have <span className="font-semibold">10 minutes</span>.
+              25 questions. You have <span className="font-semibold">20 minutes</span>.
             </p>
             <div className="mt-4 grid gap-3">
               <input
