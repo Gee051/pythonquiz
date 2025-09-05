@@ -3,56 +3,53 @@ import { useEffect, useMemo, useState } from 'react';
 
 // ================= QUESTIONS =================
 const QUESTIONS = [
-  { id: 1,  prompt: 'Which literal creates a tuple?', options: ['[1,2,3]', '(1,2,3)', '{1,2,3}', '{"a":1}'], correctIndex: 1 },
-  { id: 2,  prompt: 'Which keyword is Python’s "else if"?', options: ['elseif', 'elif', 'else if', 'elsif'], correctIndex: 1 },
-  { id: 3,  prompt: 'Which data structure removes duplicates automatically?', options: ['list', 'tuple', 'set', 'dict'], correctIndex: 2 },
-  { id: 4,  prompt: 'What will this output? for i in range(5): if i==3: break; print(i)', options: ['0 1 2', '0 1 2 3', '0 1 2 3 4', 'Error'], correctIndex: 0 },
-  { id: 5,  prompt: 'Which keyword starts a conditional block?', options: ['if', 'when', 'then', 'cond'], correctIndex: 0 },
-  { id: 6,  prompt: 'What type is the value 42?', options: ['int', 'float', 'str', 'bool'], correctIndex: 0 },
-  { id: 7,  prompt: 'Which programming language is mostly used for front-end web development?', options: ['Python', 'C++', 'JavaScript', 'Java'], correctIndex: 2 },
-  { id: 8,  prompt: 'Which operator checks equality?', options: ['=', '==', '!=', '<>'], correctIndex: 1 },
-  { id: 9,  prompt: 'Which list method removes the last item?', options: ['pop()', 'remove()', 'delete()', 'discard()'], correctIndex: 0 },
-  { id: 10, prompt: 'Which keyword does nothing and acts as a placeholder?', options: ['skip', 'continue', 'pass', 'halt'], correctIndex: 2 },
-  { id: 11, prompt: 'What error occurs for int("abc")?', options: ['ValueError', 'TypeError', 'SyntaxError', 'KeyError'], correctIndex: 0 },
-  { id: 12, prompt: 'What is the result of 2 ** 3?', options: ['5', '6', '8', '9'], correctIndex: 2 },
-  { id: 13, prompt: 'Which literal creates a list?', options: ['(1,2,3)', '[1,2,3]', '{1,2,3}', 'list(1,2,3)'], correctIndex: 1 },
-  { id: 14, prompt: '"notes.txt".endswith(".txt") returns...', options: ['True', 'False', 'Error', 'None'], correctIndex: 0 },
-  { id: 15, prompt: 'Which keyword skips the current loop iteration?', options: ['skip', 'continue', 'pass', 'ignore'], correctIndex: 1 },
-  { id: 16, prompt: 'Which error occurs if you use a variable before defining it?', options: ['NameError', 'TypeError', 'ValueError', 'IndexError'], correctIndex: 0 },
-  { id: 17, prompt: 'If x=5; x+=2 → x becomes?', options: ['5', '6', '7', '8'], correctIndex: 2 },
-  { id: 18, prompt: 'Which stores key-value pairs?', options: ['list', 'tuple', 'dict', 'set'], correctIndex: 2 },
-  { id: 19, prompt: 'Which error occurs if you type: if x>5 print("Hi")', options: ['SyntaxError', 'NameError', 'TypeError', 'ValueError'], correctIndex: 0 },
-  { id: 20, prompt: 'What is the output of: for i in range(3): print(i)', options: ['1 2 3', '0 1 2', '0 1 2 3', 'Error'], correctIndex: 1 },
-  { id: 21, prompt: 'Which assignment operator means "add and assign"?', options: ['=+', '+=', '-=', '*='], correctIndex: 1 },
-  { id: 22, prompt: 'Which string method removes spaces from both ends?', options: ['trim()', 'strip()', 'clean()', 'cut()'], correctIndex: 1 },
-  { id: 23, prompt: 'Which variable name is valid?', options: ['2name', 'first-name', 'first_name', 'first name'], correctIndex: 2 },
-  { id: 24, prompt: 'Which statement ends a loop immediately?', options: ['exit', 'break', 'stop', 'halt'], correctIndex: 1 },
-  { id: 25, prompt: 'Which literal creates a one-element tuple?', options: ['(5)', '(5,)', '[5]', '{5}'], correctIndex: 1 },
-  { id: 26, prompt: 'Which comment style is correct in Python?', options: ['// comment', '# comment', '/* comment */', '<!-- comment -->'], correctIndex: 1 },
-  { id: 27, prompt: 'What is 7//2?', options: ['3.5', '3', '4', 'Error'], correctIndex: 1 },
-  { id: 28, prompt: '"Python" in "I love Python" returns...', options: ['True', 'False', 'None', 'Error'], correctIndex: 0 },
-  { id: 29, prompt: 'What is the remainder of 10 % 3?', options: ['0', '1', '3', 'Error'], correctIndex: 1 },
-  { id: 30, prompt: 'Which block runs only if all previous conditions fail?', options: ['last', 'final', 'else', 'default'], correctIndex: 2 },
-  { id: 31, prompt: 'Which error occurs for nums[10] when nums=[1,2,3]?', options: ['IndexError', 'KeyError', 'TypeError', 'ValueError'], correctIndex: 0 },
-  { id: 32, prompt: 'Which list method adds item at the end?', options: ['push()', 'append()', 'add()', 'insertEnd()'], correctIndex: 1 },
-  { id: 33, prompt: 'What is the type of 3.14?', options: ['int', 'float', 'str', 'list'], correctIndex: 1 },
-  { id: 34, prompt: 'Which keyword is used to skip one round and move on?', options: ['skip', 'continue', 'next', 'pass'], correctIndex: 1 },
-  { id: 35, prompt: 'What is the output? for i in range(5): if i==3: continue; print(i)', options: ['0 1 2 4', '0 1 2 3 4', '0 1 2', 'Error'], correctIndex: 0 },
-  { id: 36, prompt: 'Which built-in function checks the type of a variable?', options: ['datatype()', 'type()', 'typeof()', 'class()'], correctIndex: 1 },
-  { id: 37, prompt: 'Which error occurs for x="3"; y=3; print(x+y)?', options: ['TypeError', 'ValueError', 'IndexError', 'SyntaxError'], correctIndex: 0 },
-  { id: 38, prompt: 'Which is the correct keyword for an else if in Python?', options: ['elseif', 'elif', 'else-if', 'elsif'], correctIndex: 1 },
-  { id: 39, prompt: 'What will bool("") return?', options: ['True', 'False', 'None', 'Error'], correctIndex: 1 },
-  { id: 40, prompt: 'Which operator checks if an item exists in a list?', options: ['contains()', 'in', 'exists', 'has'], correctIndex: 1 },
-  { id: 41, prompt: 'Which programming language is used for backend in Ruby on Rails?', options: ['Ruby', 'JavaScript', 'Python', 'C'], correctIndex: 0 },
-  { id: 42, prompt: 'Which statement is only a placeholder that does nothing?', options: ['pass', 'continue', 'skip', 'return'], correctIndex: 0 },
-  { id: 43, prompt: 'Which string method converts to uppercase?', options: ['upper()', 'uppercase()', 'toUpper()', 'capitalizeAll()'], correctIndex: 0 },
-  { id: 44, prompt: 'What will len({"a":1, "b":2, "c":3}) return?', options: ['2', '3', '4', 'Error'], correctIndex: 1 },
-  { id: 45, prompt: 'What will this run? x=7; if x%2==0: print("Even") else: print("Odd")', options: ['Even', 'Odd', 'Error', 'None'], correctIndex: 1 },
-  { id: 46, prompt: 'Which loop is used when you don’t know repetitions in advance?', options: ['for', 'while', 'loop', 'next'], correctIndex: 1 },
-  { id: 47, prompt: 'Which method safely gets a dict value with a default?', options: ['dict.fetch()', 'dict.get()', 'dict.value()', 'dict.lookup()'], correctIndex: 1 },
-  { id: 48, prompt: 'Which statement about tuples is true?', options: ['Tuples are mutable', 'Tuples are immutable', 'Tuples are unordered', 'Tuples can only hold numbers'], correctIndex: 1 },
-  { id: 49, prompt: 'Which error occurs if you divide by zero?', options: ['ZeroDivisionError', 'SyntaxError', 'TypeError', 'NameError'], correctIndex: 0 },
-  { id: 50, prompt: 'Which literal creates a set?', options: ['[1,2,3]', '{1,2,3}', '(1,2,3)', '{"a":1}'], correctIndex: 1 }
+  // === Functions ===
+  { id: 1, prompt: 'Which keyword is used to define a function in Python?', options: ['func', 'def', 'function', 'fn'], correctIndex: 1 },
+  { id: 2, prompt: 'What does a function return if no return statement is provided?', options: ['0', 'None', 'Error', 'Empty string'], correctIndex: 1 },
+  { id: 3, prompt: 'Which is a correct function definition?', options: ['function add(x,y): return x+y', 'def add(x,y) return x+y', 'def add(x,y): return x+y', 'func add(x,y): return x+y'], correctIndex: 2 },
+  { id: 4, prompt: 'What will print_result(5) output if the function is defined as def print_result(x): print(x*2)?', options: ['5', '10', 'Error', 'None'], correctIndex: 1 },
+
+  // === Error Handling ===
+  { id: 5, prompt: 'Which block always runs whether or not an exception occurs?', options: ['try', 'except', 'else', 'finally'], correctIndex: 3 },
+  { id: 6, prompt: 'Which error occurs if you try to divide 5 by 0?', options: ['TypeError', 'ValueError', 'ZeroDivisionError', 'IndexError'], correctIndex: 2 },
+  { id: 7, prompt: 'Which error occurs if you access a dictionary key that does not exist?', options: ['NameError', 'KeyError', 'IndexError', 'ValueError'], correctIndex: 1 },
+  { id: 8, prompt: 'What does this code print? try: print(int("abc")) except ValueError: print("Error")', options: ['abc', 'Error', '0', 'None'], correctIndex: 1 },
+
+  // === Git ===
+  { id: 9, prompt: 'Which command shows the installed version of Git?', options: ['git -v', 'git version', 'git --version', 'git check'], correctIndex: 2 },
+  { id: 10, prompt: 'What does the error "git is not recognized" usually mean?', options: ['Git is broken', 'Git is not installed or not in PATH', 'Wrong repository', 'Network error'], correctIndex: 1 },
+  { id: 11, prompt: 'Which command initializes a new Git repository?', options: ['git start', 'git init', 'git new', 'git repo'], correctIndex: 1 },
+  { id: 12, prompt: 'Which command stages all files for commit?', options: ['git commit all', 'git add *', 'git add .', 'git stage'], correctIndex: 2 },
+  { id: 13, prompt: 'Which Git command shows the current branch?', options: ['git branch', 'git status', 'git show', 'git current'], correctIndex: 0 },
+  { id: 14, prompt: 'What does "src refspec main does not match any" mean?', options: ['No commits yet or wrong branch name', 'Network error', 'GitHub down', 'Invalid repo'], correctIndex: 0 },
+  { id: 15, prompt: 'Which command sets your global Git username?', options: ['git set name', 'git config name', 'git config --global user.name "Name"', 'git username'], correctIndex: 2 },
+
+  // === Nested Lists ===
+  { id: 16, prompt: 'Which accesses the number 5 in [[1,2,3],[4,5,6],[7,8,9]]?', options: ['matrix[2][1]', 'matrix[1][1]', 'matrix[1][2]', 'matrix[0][2]'], correctIndex: 1 },
+  { id: 17, prompt: 'Which prints the second column from matrix=[[1,2,3],[4,5,6],[7,8,9]]?', options: ['[row[1] for row in matrix]', '[matrix[1] for row in matrix]', 'matrix[1][*]', 'matrix[:][1]'], correctIndex: 0 },
+  { id: 18, prompt: 'What does sum([row[0] for row in [[1,2],[3,4],[5,6]]]) return?', options: ['9', '6', '15', '10'], correctIndex: 2 },
+
+  // === Nested Dicts ===
+  { id: 19, prompt: 'How do you access Grace’s math score in {"Grace": {"math": 85, "english": 90}}?', options: ['scores["Grace"].math', 'scores["Grace"]["math"]', 'scores.math["Grace"]', 'scores["math"]["Grace"]'], correctIndex: 1 },
+  { id: 20, prompt: 'Which loop prints all keys and values in a dict?', options: ['for k in dict: print(k)', 'for k,v in dict.items(): print(k,v)', 'for v in dict.values(): print(v)', 'for dict in k: print(k)'], correctIndex: 1 },
+  { id: 21, prompt: 'Which finds the most expensive product in products={"Phone":{"price":500},"Laptop":{"price":1000}}?', options: ['max(products)', 'max(products.values())', 'max(products, key=lambda x: products[x]["price"])', 'products["Laptop"]["price"]'], correctIndex: 2 },
+
+  // === Sets ===
+  { id: 22, prompt: 'Which creates a set with unique names?', options: ['["Grace","Idunnu"]', '{"Grace","Idunnu"}', '("Grace","Idunnu")', '{"Grace": "Idunnu"}'], correctIndex: 1 },
+  { id: 23, prompt: 'What is the result of {"a","b"} | {"b","c"}?', options: ['{"b"}', '{"a","c"}', '{"a","b","c"}', '{"a","b"}'], correctIndex: 2 },
+  { id: 24, prompt: 'What is the result of {"a","b"} & {"b","c"}?', options: ['{"a"}', '{"c"}', '{"b"}', '{}'], correctIndex: 2 },
+  { id: 25, prompt: 'What does {"a","b"} - {"b"} return?', options: ['{"a"}', '{"b"}', '{}', '{"a","b"}'], correctIndex: 0 },
+
+  // === Functions + Errors Combo ===
+  { id: 26, prompt: 'What happens if a function does not handle a ZeroDivisionError?', options: ['Ignores it', 'Crashes program', 'Returns None', 'Prints 0'], correctIndex: 1 },
+  { id: 27, prompt: 'Which defines a function that raises ValueError?', options: ['def f(): raise ValueError("Bad")', 'def f(): error ValueError', 'function f(): ValueError', 'def f(): return ValueError'], correctIndex: 0 },
+
+  // === Git + Error Handling ===
+  { id: 28, prompt: 'If git commit says "identity unknown", what should you set?', options: ['user.id', 'git identity', 'user.name and user.email', 'branch.name'], correctIndex: 2 },
+
+  // === Mixed Python Logic ===
+  { id: 29, prompt: 'Which error is raised by list=[1,2,3]; print(list[5])?', options: ['KeyError', 'IndexError', 'TypeError', 'NameError'], correctIndex: 1 },
+  { id: 30, prompt: 'Which error is raised by print(1+"2")?', options: ['ValueError', 'TypeError', 'SyntaxError', 'IndexError'], correctIndex: 1 },
 ];
 
 
@@ -67,7 +64,7 @@ export default function QuizPage() {
   const [startedAt, setStartedAt] = useState(null);
   const [now, setNow] = useState(Date.now());
   const [showInfo, setShowInfo] = useState(false);
-  const durationSec = 1500; 
+  const durationSec = 900; 
 
   // timer
   useEffect(() => {
@@ -132,7 +129,7 @@ export default function QuizPage() {
           <main className="bg-[#121833] border border-indigo-900/50 rounded-2xl p-6">
             <h2 className="text-xl font-semibold">Welcome</h2>
             <p className="text-indigo-200/80 mt-2">
-              50 questions. You have <span className="font-semibold">25 minutes</span>.
+              30 questions. You have <span className="font-semibold">15 minutes</span>.
             </p>
             <div className="mt-4 grid gap-3">
               <input
