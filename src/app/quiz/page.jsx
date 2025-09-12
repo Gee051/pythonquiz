@@ -155,7 +155,7 @@ export default function QuizPage() {
           <main className="bg-[#121833] border border-indigo-900/50 rounded-2xl p-6">
             <h2 className="text-xl font-semibold">Welcome</h2>
             <p className="text-indigo-200/80 mt-2">
-              30 questions. You have <span className="font-semibold">20 minutes</span>.
+              35 questions. You have <span className="font-semibold">20 minutes</span>.
             </p>
             <div className="mt-4 grid gap-3">
               <input
