@@ -2,7 +2,6 @@
 import { useEffect, useMemo, useState } from 'react';
 
 // ================= QUESTIONS =================
-'use client';
 
 const QUESTIONS = [
   { id: 1,  prompt: 'What does open("log.txt","a") guarantee about existing content?', options: ['It is preserved and new data goes to the end', 'It is overwritten', 'File opens read-only', 'It raises FileExistsError'], correctIndex: 0 },
