@@ -4,77 +4,88 @@ import { useEffect, useMemo, useState } from 'react';
 // ================= QUESTIONS =================
 
 const QUESTIONS = [
-  { id: 1,  prompt: 'What does open("log.txt","a") guarantee about existing content?', options: ['It is preserved and new data goes to the end', 'It is overwritten', 'File opens read-only', 'It raises FileExistsError'], correctIndex: 0 },
+  { id: 1,  prompt: 'open("notes.txt","x") is called but notes.txt already exists. What happens?', options: ['Opens file for writing', 'Raises FileExistsError', 'Opens in append mode', 'Creates a directory'], correctIndex: 1 },
 
-  { id: 2,  prompt: 'Which call most reliably prevents extra blank lines when writing CSV on Windows?', options: ['open("scores.csv","w")', 'open("scores.csv","w",newline="")', 'open("scores.csv","w",encoding="utf-8")', 'open("scores.csv","wb")'], correctIndex: 1 },
+  { id: 2,  prompt: 'After f = open("data.txt","w"); f.write("Hi"), what is stored in the file before f.close()?', options: ['Nothing until close', '"Hi" immediately (buffered)', '"Hi\\n" with newline', 'An error occurs'], correctIndex: 1 },
 
-  { id: 3,  prompt: 'open("data.txt","x") is called but data.txt already exists. What happens?', options: ['Creates empty file', 'Opens existing file for read', 'Raises FileExistsError', 'Silently switches to "w"'], correctIndex: 2 },
+  { id: 3,  prompt: 'os.getcwd() returns what?', options: ['Root directory', 'Last file opened', 'Current working directory path', 'Parent directory'], correctIndex: 2 },
 
-  { id: 4,  prompt: 'You open a huge file and do f.readlines(). What is the biggest risk?', options: ['Slow writes', 'It reads line by line lazily', 'High memory usage', 'It changes encoding'], correctIndex: 2 },
+  { id: 4,  prompt: 'Which Windows command lists only hidden files?', options: ['dir /ah', 'dir /w', 'ls -a', 'show hidden'], correctIndex: 0 },
 
-  { id: 5,  prompt: 'Which statement about with open(...) as f: is MOST accurate?', options: ['It closes file only if no errors', 'It closes file automatically even on errors', 'It never closes file automatically', 'It only works for binary mode'], correctIndex: 1 },
+  { id: 5,  prompt: 'Which file mode truncates an existing file but allows reading and writing?', options: ['w+', 'a+', 'r+', 'x+'], correctIndex: 0 },
 
-  { id: 6,  prompt: 'What does json.dump(obj, f, ensure_ascii=False) change compared to default?', options: ['Forces ASCII escape sequences', 'Writes Unicode characters directly (e.g., é)', 'Minifies JSON', 'Prevents writing newlines'], correctIndex: 1 },
+  { id: 6,  prompt: 'What does f.readline() return at EOF?', options: ['None', '"" (empty string)', 'Raises StopIteration', 'Last line again'], correctIndex: 1 },
 
-  { id: 7,  prompt: 'Given from pathlib import Path; p = Path("notes.txt"); which checks existence?', options: ['exists(p)', 'p.is_file()', 'Path.exists("notes.txt")', 'p.exists()'], correctIndex: 3 },
+  { id: 7,  prompt: 'os.remove("report.docx") on a missing file will...', options: ['Create empty file', 'Delete silently', 'Raise FileNotFoundError', 'Return False'], correctIndex: 2 },
 
-  { id: 8,  prompt: 'Which mode allows reading AND writing but truncates file on open?', options: ['r+', 'a+', 'w+', 'x'], correctIndex: 2 },
+  { id: 8,  prompt: 'Which bash command creates nested folders at once?', options: ['mkdir path1/path2', 'mkdir -p path1/path2', 'cd path1/path2', 'dir path1/path2'], correctIndex: 1 },
 
-  { id: 9,  prompt: 'You call f = open("report.txt","r",encoding="utf-8"); data = f.read(); Which line safely removes trailing newlines when printing each line?', options: ['print(data.rstrip("\\n"))', 'for line in data: print(line.strip())', 'for line in data.splitlines(): print(line)', 'print(data.striplines())'], correctIndex: 2 },
+  { id: 9,  prompt: 'Which resets the file cursor to the beginning?', options: ['f.close()', 'f.flush()', 'f.seek(0)', 'f.truncate()'], correctIndex: 2 },
 
-  { id: 10, prompt: 'Which error is MOST appropriate when open("C:/Windows") is used as a file?', options: ['FileNotFoundError', 'IsADirectoryError', 'PermissionError', 'UnicodeDecodeError'], correctIndex: 1 },
+  { id: 10, prompt: 'Which construct ensures a file is closed automatically?', options: ['with open("log.txt") as f:', 'open("log.txt")', 'close("log.txt")', 'os.close("log.txt")'], correctIndex: 0 },
 
-  { id: 11,  prompt: 'Which library is best for working with file paths in a cross-platform way?', options: ['os', 'pathlib', 'sys', 'shutil'], correctIndex: 1 },
+  { id: 11, prompt: 'len(f.readlines()) after opening file with "w" mode gives?', options: ['0', 'Error: not readable', 'Empty lines count', '-1'], correctIndex: 1 },
 
-  { id: 12, prompt: 'After f.read(10), the next f.read(10) will:', options: ['Re-read the same 10 bytes', 'Read the next 10 bytes', 'Raise EOFError', 'Reset pointer to start'], correctIndex: 1 },
+  { id: 12, prompt: 'What happens if you run del myfile.txt in Python?', options: ['Deletes the file', 'Deletes a variable (not file)', 'SyntaxError', 'Moves file to recycle bin'], correctIndex: 1 },
 
-  { id: 13, prompt: 'In Windows CMD, which actually creates a file?', options: ['touch notes.txt', 'new notes.txt', 'echo. > notes.txt', 'file create notes.txt'], correctIndex: 2 },
+  { id: 13, prompt: 'Which mode allows reading and appending without truncating?', options: ['r', 'w+', 'a+', 'x+'], correctIndex: 2 },
 
-  { id: 14, prompt: 'In Windows CMD, which shows the current working directory?', options: ['pwd', 'where', 'cd', 'dir'], correctIndex: 2 },
+  { id: 14, prompt: 'Which function checks if a path is a file?', options: ['os.ispath()', 'os.isfile()', 'os.path.isfile()', 'file.exists()'], correctIndex: 2 },
 
-  { id: 15, prompt: 'Which open mode will FAIL if the file already exists?', options: ['x', 'w', 'a', 'r+'], correctIndex: 0 },
+  { id: 15, prompt: 'f.truncate(5) on a 20-byte file will...', options: ['Delete the file', 'Reduce file to 5 bytes', 'Leave file unchanged', 'Set cursor to 5'], correctIndex: 1 },
 
-  { id: 16, prompt: 'Which is safest for cross-platform paths?', options: ['"C:\\data\\file.txt"', 'os.path + manual joins', 'pathlib.Path join using / operator', 'Hard-coded relative strings'], correctIndex: 2 },
+  { id: 16, prompt: 'Which command removes a directory only if empty?', options: ['rm dir', 'rmdir dir', 'del dir', 'rm -rf dir'], correctIndex: 1 },
 
-  { id: 17, prompt: 'You read a UTF-8 file using open(..., encoding="latin-1"). Most likely result?', options: ['UnicodeDecodeError', 'Data is garbled but no error', 'FileNotFoundError', 'IsADirectoryError'], correctIndex: 1 },
+  { id: 17, prompt: 'os.mkdir("docs") when docs already exists will...', options: ['Create inside docs', 'Raise FileExistsError', 'Overwrite folder', 'Do nothing'], correctIndex: 1 },
 
-  { id: 18, prompt: 'Which MOST accurately explains open("log.txt","a+")?', options: ['Read & write; pointer at start; truncates', 'Append & read; writes go to end; file created if missing', 'Read only; pointer at end', 'Write only; pointer at end; truncates'], correctIndex: 1 },
+  { id: 18, prompt: 'What does "b" mean in file mode "rb"?', options: ['Binary mode', 'Buffered mode', 'Big data mode', 'Background mode'], correctIndex: 0 },
 
-  { id: 19, prompt: 'What does indent=2 do in json.dump(..., indent=2)?', options: ['Compresses JSON', 'Sets 2-space pretty formatting', 'Forces Windows newlines', 'Writes tabs instead of spaces'], correctIndex: 1 },
+  { id: 19, prompt: 'What does cd .. do in bash?', options: ['Open parent directory', 'Delete parent directory', 'Show parent name', 'Create parent directory'], correctIndex: 0 },
 
-  { id: 20, prompt: 'Which loop is best for processing VERY large text files?', options: ['lines = f.readlines(); for line in lines:', 'for line in f:', 'text = f.read(); for ch in text:', 'while True: f.read()'], correctIndex: 1 },
+  { id: 20, prompt: 'Opening a file with "a" and writing "Hello" places it...', options: ['At beginning', 'Overwrites first 5 chars', 'At end of file', 'Always creates new file'], correctIndex: 2 },
 
-  { id: 21, prompt: 'You need to append bytes to an image. Which mode?', options: ['"a"', '"ab"', '"wb"', '"rb+"'], correctIndex: 1 },
+  { id: 21, prompt: 'Which reads entire file content into memory?', options: ['f.readline()', 'f.read()', 'f.readlines()', 'f.readall()'], correctIndex: 1 },
 
-  { id: 22, prompt: 'What happens if you do with open("out.txt","w") as f: and never call f.close() explicitly?', options: ['File stays open', 'Data is not written', 'Context manager closes it automatically', 'Raises ResourceWarning immediately'], correctIndex: 2 },
+  { id: 22, prompt: 'cd \\\\ in Windows CMD moves to...', options: ['Home directory', 'Root directory', 'Current folder', 'Clears directory'], correctIndex: 1 },
 
- { id: 23, prompt: 'Which command clears the screen in Windows CMD?', options: ['cls', 'clear', 'reset', 'clean'], correctIndex: 0 },
+  { id: 23, prompt: 'open("file.txt","r") when file is missing raises...', options: ['IOError', 'OSError', 'FileNotFoundError', 'PermissionError'], correctIndex: 2 },
 
-  { id: 24, prompt: 'In Windows CMD, which removes a DIRECTORY (folder) that is empty?', options: ['del folder', 'rmdir folder', 'rm folder', 'erase folder'], correctIndex: 1 },
+  { id: 24, prompt: 'Which mode prevents overwriting an existing file?', options: ['w', 'x', 'a+', 'r+'], correctIndex: 1 },
 
-  { id: 25, prompt: 'Why might json.load(f) fail after you wrote JSON with the wrong encoding?', options: ['FileNotFoundError', 'IsADirectoryError', 'UnicodeDecodeError', 'KeyError'], correctIndex: 2 },
+  { id: 25, prompt: 'If you open a file with "r+" and immediately call f.write("ABC"), what happens?', options: ['Writes at start, overwriting first characters', 'Appends at end', 'Raises error', 'File gets truncated'], correctIndex: 0 },
 
-  { id: 26, prompt: 'You need to guarantee “write then replace” without partial files on most OSes. A common safe pattern is:', options: ['Open with "w+" always', 'Write to temp file then os.replace(temp, real)', 'Open in binary then text', 'Use r+ to avoid truncation'], correctIndex: 1 },
+  { id: 26, prompt: 'Which mode allows read and write without truncating?', options: ['r+', 'w+', 'a', 'x+'], correctIndex: 0 },
 
-  { id: 27, prompt: 'Which MOST reliably prints the absolute path of Path("data/file.txt")?', options: ['print(Path("data/file.txt").absolute())', 'print(Path("data/file.txt").resolve())', 'print(str("data/file.txt"))', 'print(os.path.abspath())'], correctIndex: 1 },
+  { id: 27, prompt: 'rm -rf * in bash will...', options: ['Delete nothing', 'Delete all files & folders recursively', 'Show files only', 'Force restart'], correctIndex: 1 },
 
-  { id: 28, prompt: 'You open a file with open("x.txt","r"); immediately call f.write("hi"). Result?', options: ['Writes "hi"', 'Appends "hi"', 'Raises io.UnsupportedOperation (not writable)', 'Silently fails'], correctIndex: 2 },
+  { id: 28, prompt: 'os.path.join("folder","file.txt") on Windows returns...', options: ['folder/file.txt', 'folder\\\\file.txt', 'folder.file.txt', 'Error'], correctIndex: 1 },
 
- 
-  { id: 29, prompt: 'What is the purpose of newline="" when writing CSV files in Python?', options: ['Adds two new lines', 'Prevents extra blank lines on Windows', 'Forces UTF-8 encoding', 'Adds commas automatically'], correctIndex: 1 },
-  { id: 30, prompt: 'Which Windows CMD command lists files (including showing if a file exists)?', options: ['ls', 'dir', 'pwd', 'where'], correctIndex: 1 },
+  { id: 29, prompt: 'What does f.flush() do?', options: ['Empties the file', 'Writes buffer to disk', 'Moves cursor to start', 'Deletes file handle'], correctIndex: 1 },
 
-  { id: 31, prompt: 'What happens if you use open("data.txt","x") when the file already exists?', options: ['File opens in read mode', 'File is overwritten', 'File is deleted', 'Raises FileExistsError'], correctIndex: 3 },
+  { id: 30, prompt: 'Which command shows present directory in Windows CMD?', options: ['pwd', 'where', 'echo %cd%', 'dir'], correctIndex: 2 },
+
+  { id: 31, prompt: 'Opening binary file in "r" (text mode) may...', options: ['Work fine', 'Cause decode errors', 'Read as binary', 'Raise FileError'], correctIndex: 1 },
+
+  { id: 32, prompt: 'Which method writes list of strings at once?', options: ['f.writelines(list)', 'f.write(list)', 'f.append(list)', 'f.dump(list)'], correctIndex: 0 },
+
+  { id: 33, prompt: 'In Windows CMD, dir /s will...', options: ['Show only system files', 'List files in current and subfolders', 'Show hidden files', 'Delete files'], correctIndex: 1 },
+
+  { id: 34, prompt: '"rt" mode in open() means...', options: ['Read text (default)', 'Read truncated', 'Read temporary', 'Read tabular'], correctIndex: 0 },
+
+  { id: 35, prompt: 'What does f.tell() return in Python?', options: ['File size', 'Cursor position (byte offset)', 'Line number', 'Encoding type'], correctIndex: 1 },
 
 
-  { id: 32, prompt: 'Which Python command prints the current working directory?', options: ['os.getcwd()', 'os.path()', 'path.cwd()', 'dir()'], correctIndex: 0 },
+  { id: 36, prompt: 'What happens if you open a file with "w" and then immediately close it?', options: ['File deleted', 'File created/emptied', 'Nothing happens', 'Appended data lost'], correctIndex: 1 },
 
-  { id: 33, prompt: 'What is the default mode of open() if none is specified?', options: ['w', 'r', 'a', 'x'], correctIndex: 1 },
+  { id: 37, prompt: 'In Python, which method reads one line at a time but allows iteration?', options: ['f.read()', 'for line in f:', 'f.readlines()', 'f.scanlines()'], correctIndex: 1 },
 
-  { id: 34, prompt: 'Which pattern is safest for file handling?', options: ['open() then close()', 'with open(...) as f:', 'try + close()', 'file.open()'], correctIndex: 1 },
+  { id: 38, prompt: 'What does os.path.exists("demo.txt") return if the file is missing?', options: ['None', 'False', 'Raises Error', 'True'], correctIndex: 1 },
 
-  { id: 35, prompt: 'Which is TRUE about open(..., "r") default encoding on Windows?', options: ['Always UTF-8', 'Always cp1252', 'Depends on the system default unless encoding is specified', 'Random between UTF-8 and ASCII'], correctIndex: 2 }
+  { id: 39, prompt: 'Which open mode allows binary writing only?', options: ['wb', 'rb', 'ab', 'rt'], correctIndex: 0 },
+
+  { id: 40, prompt: 'In Windows CMD, what does del *.txt do?', options: ['Deletes all .txt files in folder', 'Deletes only hidden .txt files', 'Deletes txt files in subfolders too', 'Renames all .txt files'], correctIndex: 0 }
 ];
+
 
 
 
@@ -89,7 +100,7 @@ export default function QuizPage() {
   const [startedAt, setStartedAt] = useState(null);
   const [now, setNow] = useState(Date.now());
   const [showInfo, setShowInfo] = useState(false);
-  const durationSec = 2100; 
+  const durationSec = 1100; 
 
   // timer
   useEffect(() => {
@@ -154,7 +165,7 @@ export default function QuizPage() {
           <main className="bg-[#121833] border border-indigo-900/50 rounded-2xl p-6">
             <h2 className="text-xl font-semibold">Welcome</h2>
             <p className="text-indigo-200/80 mt-2">
-              35 questions. You have <span className="font-semibold">20 minutes</span>.
+              40 questions. You have <span className="font-semibold">20 minutes</span>.
             </p>
             <div className="mt-4 grid gap-3">
               <input
