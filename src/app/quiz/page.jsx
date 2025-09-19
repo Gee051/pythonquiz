@@ -100,7 +100,7 @@ export default function QuizPage() {
   const [startedAt, setStartedAt] = useState(null);
   const [now, setNow] = useState(Date.now());
   const [showInfo, setShowInfo] = useState(false);
-  const durationSec = 1100; 
+  const durationSec = 1500; 
 
   // timer
   useEffect(() => {
