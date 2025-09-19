@@ -4,87 +4,67 @@ import { useEffect, useMemo, useState } from 'react';
 // ================= QUESTIONS =================
 
 const QUESTIONS = [
-  { id: 1,  prompt: 'open("notes.txt","x") is called but notes.txt already exists. What happens?', options: ['Opens file for writing', 'Raises FileExistsError', 'Opens in append mode', 'Creates a directory'], correctIndex: 1 },
+  { id: 1,  prompt: 'Which keyword is used to define a class in Python?', options: ['object', 'class', 'def', 'method'], correctIndex: 1 },
 
-  { id: 2,  prompt: 'After f = open("data.txt","w"); f.write("Hi"), what is stored in the file before f.close()?', options: ['Nothing until close', '"Hi" immediately (buffered)', '"Hi\\n" with newline', 'An error occurs'], correctIndex: 1 },
+  { id: 2,  prompt: 'What does the __init__ method do?', options: ['Deletes objects', 'Initializes new objects', 'Defines private variables', 'Creates a module'], correctIndex: 1 },
 
-  { id: 3,  prompt: 'os.getcwd() returns what?', options: ['Root directory', 'Last file opened', 'Current working directory path', 'Parent directory'], correctIndex: 2 },
+  { id: 3,  prompt: 'In class methods, what does the self parameter represent?', options: ['The class itself', 'The parent class', 'The current object instance', 'The module'], correctIndex: 2 },
 
-  { id: 4,  prompt: 'Which Windows command lists only hidden files?', options: ['dir /ah', 'dir /w', 'ls -a', 'show hidden'], correctIndex: 0 },
+  { id: 4,  prompt: 'Which is the correct way to define a Person class with a name attribute?', options: ['class Person: def __init__(name): self.name = name', 'class Person: def __init__(self, name): self.name = name', 'def Person(self, name): self.name = name', 'class Person(self, name): self.name = name'], correctIndex: 1 },
 
-  { id: 5,  prompt: 'Which file mode truncates an existing file but allows reading and writing?', options: ['w+', 'a+', 'r+', 'x+'], correctIndex: 0 },
+  { id: 5,  prompt: 'What will print(type(Student)) output if Student is a class?', options: ["<class 'object'>", "<class 'Student'>", "'Student'", "'object'"], correctIndex: 0 },
 
-  { id: 6,  prompt: 'What does f.readline() return at EOF?', options: ['None', '"" (empty string)', 'Raises StopIteration', 'Last line again'], correctIndex: 1 },
+  { id: 6,  prompt: 'What is an instance attribute?', options: ['A variable shared by all objects', 'A variable unique to each object', 'A constant in a class', 'A method'], correctIndex: 1 },
 
-  { id: 7,  prompt: 'os.remove("report.docx") on a missing file will...', options: ['Create empty file', 'Delete silently', 'Raise FileNotFoundError', 'Return False'], correctIndex: 2 },
+  { id: 7,  prompt: 'What is a class attribute?', options: ['Variable shared by all instances of the class', 'Variable unique to one object', 'Only private attributes', 'A method inside the class'], correctIndex: 0 },
 
-  { id: 8,  prompt: 'Which bash command creates nested folders at once?', options: ['mkdir path1/path2', 'mkdir -p path1/path2', 'cd path1/path2', 'dir path1/path2'], correctIndex: 1 },
+  { id: 8,  prompt: 'Which of these creates a private attribute?', options: ['balance', '_balance', '__balance', 'private balance'], correctIndex: 2 },
 
-  { id: 9,  prompt: 'Which resets the file cursor to the beginning?', options: ['f.close()', 'f.flush()', 'f.seek(0)', 'f.truncate()'], correctIndex: 2 },
+  { id: 9,  prompt: 'What does encapsulation mean in OOP?', options: ['Hiding implementation details', 'Sharing variables across classes', 'Using multiple constructors', 'Defining functions outside a class'], correctIndex: 0 },
 
-  { id: 10, prompt: 'Which construct ensures a file is closed automatically?', options: ['with open("log.txt") as f:', 'open("log.txt")', 'close("log.txt")', 'os.close("log.txt")'], correctIndex: 0 },
+  { id: 10, prompt: 'Which special method is automatically called when printing an object?', options: ['__init__', '__print__', '__str__', '__start__'], correctIndex: 2 },
 
-  { id: 11, prompt: 'len(f.readlines()) after opening file with "w" mode gives?', options: ['0', 'Error: not readable', 'Empty lines count', '-1'], correctIndex: 1 },
+  { id: 11, prompt: 'Which special method is used to give a formal debug string representation?', options: ['__show__', '__debug__', '__repr__', '__str__'], correctIndex: 2 },
 
-  { id: 12, prompt: 'What happens if you run del myfile.txt in Python?', options: ['Deletes the file', 'Deletes a variable (not file)', 'SyntaxError', 'Moves file to recycle bin'], correctIndex: 1 },
+  { id: 12, prompt: 'What is inheritance in Python OOP?', options: ['Ability to hide variables', 'Creating new classes from existing ones', 'Overloading operators', 'Running multiple classes at once'], correctIndex: 1 },
 
-  { id: 13, prompt: 'Which mode allows reading and appending without truncating?', options: ['r', 'w+', 'a+', 'x+'], correctIndex: 2 },
+  { id: 13, prompt: 'Which function is used to call the parent class constructor?', options: ['base()', 'super()', 'parent()', 'extend()'], correctIndex: 1 },
 
-  { id: 14, prompt: 'Which function checks if a path is a file?', options: ['os.ispath()', 'os.isfile()', 'os.path.isfile()', 'file.exists()'], correctIndex: 2 },
+  { id: 14, prompt: 'What is method overriding?', options: ['Using the same variable in two classes', 'Child class redefining a parent class method', 'Calling methods with different names', 'Private method duplication'], correctIndex: 1 },
 
-  { id: 15, prompt: 'f.truncate(5) on a 20-byte file will...', options: ['Delete the file', 'Reduce file to 5 bytes', 'Leave file unchanged', 'Set cursor to 5'], correctIndex: 1 },
+  { id: 15, prompt: 'Polymorphism in OOP means?', options: ['Same method name with different implementations', 'Hiding attributes', 'Multiple parent classes only', 'Static methods'], correctIndex: 0 },
 
-  { id: 16, prompt: 'Which command removes a directory only if empty?', options: ['rm dir', 'rmdir dir', 'del dir', 'rm -rf dir'], correctIndex: 1 },
+  { id: 16, prompt: 'Which keyword defines a subclass from a parent?', options: ['extends', 'inherits', 'class Child(Parent)', 'superclass'], correctIndex: 2 },
 
-  { id: 17, prompt: 'os.mkdir("docs") when docs already exists will...', options: ['Create inside docs', 'Raise FileExistsError', 'Overwrite folder', 'Do nothing'], correctIndex: 1 },
+  { id: 17, prompt: 'What happens if a class has no __init__ method defined?', options: ['It cannot be instantiated', 'Python provides a default constructor', 'It raises an error', 'Attributes are auto-created'], correctIndex: 1 },
 
-  { id: 18, prompt: 'What does "b" mean in file mode "rb"?', options: ['Binary mode', 'Buffered mode', 'Big data mode', 'Background mode'], correctIndex: 0 },
+  { id: 18, prompt: 'Which built-in function checks if an object is an instance of a class?', options: ['typeof()', 'classof()', 'isinstance()', 'object()'], correctIndex: 2 },
 
-  { id: 19, prompt: 'What does cd .. do in bash?', options: ['Open parent directory', 'Delete parent directory', 'Show parent name', 'Create parent directory'], correctIndex: 0 },
+  { id: 19, prompt: 'Which built-in function lists all attributes and methods of an object?', options: ['methods()', 'dir()', 'vars()', 'inspect()'], correctIndex: 1 },
 
-  { id: 20, prompt: 'Opening a file with "a" and writing "Hello" places it...', options: ['At beginning', 'Overwrites first 5 chars', 'At end of file', 'Always creates new file'], correctIndex: 2 },
+  { id: 20, prompt: 'What will hasattr(obj, "name") return if obj has attribute name?', options: ['Error', 'False always', 'True', 'The attribute value'], correctIndex: 2 },
 
-  { id: 21, prompt: 'Which reads entire file content into memory?', options: ['f.readline()', 'f.read()', 'f.readlines()', 'f.readall()'], correctIndex: 1 },
+  { id: 21, prompt: 'What decorator is used for class-level methods that access cls?', options: ['@staticmethod', '@classmethod', '@class', '@property'], correctIndex: 1 },
 
-  { id: 22, prompt: 'cd \\\\ in Windows CMD moves to...', options: ['Home directory', 'Root directory', 'Current folder', 'Clears directory'], correctIndex: 1 },
+  { id: 22, prompt: 'Which decorator makes a method belong to the class but not access self or cls?', options: ['@staticmethod', '@classmethod', '@property', '@method'], correctIndex: 0 },
 
-  { id: 23, prompt: 'open("file.txt","r") when file is missing raises...', options: ['IOError', 'OSError', 'FileNotFoundError', 'PermissionError'], correctIndex: 2 },
+  { id: 23, prompt: 'What does @property decorator do?', options: ['Makes a method behave like an attribute', 'Makes an attribute private', 'Defines a static method', 'Overloads operators'], correctIndex: 0 },
 
-  { id: 24, prompt: 'Which mode prevents overwriting an existing file?', options: ['w', 'x', 'a+', 'r+'], correctIndex: 1 },
+  { id: 24, prompt: 'Multiple inheritance in Python is resolved using?', options: ['Order of definition only', 'Method Resolution Order (MRO)', 'Parent class priority', 'Alphabetical order'], correctIndex: 1 },
 
-  { id: 25, prompt: 'If you open a file with "r+" and immediately call f.write("ABC"), what happens?', options: ['Writes at start, overwriting first characters', 'Appends at end', 'Raises error', 'File gets truncated'], correctIndex: 0 },
+  { id: 25, prompt: 'Which dunder method checks equality with == ?', options: ['__eq__', '__cmp__', '__same__', '__equal__'], correctIndex: 0 },
 
-  { id: 26, prompt: 'Which mode allows read and write without truncating?', options: ['r+', 'w+', 'a', 'x+'], correctIndex: 0 },
+  { id: 26, prompt: 'What is composition in OOP?', options: ['Using multiple parent classes', 'A class containing objects of other classes', 'Child overriding parent', 'Sharing class attributes'], correctIndex: 1 },
 
-  { id: 27, prompt: 'rm -rf * in bash will...', options: ['Delete nothing', 'Delete all files & folders recursively', 'Show files only', 'Force restart'], correctIndex: 1 },
+  { id: 27, prompt: 'What does super() return inside a child class?', options: ['A reference to parent class', 'The current object', 'A private attribute', 'The module name'], correctIndex: 0 },
 
-  { id: 28, prompt: 'os.path.join("folder","file.txt") on Windows returns...', options: ['folder/file.txt', 'folder\\\\file.txt', 'folder.file.txt', 'Error'], correctIndex: 1 },
+  { id: 28, prompt: 'If class Student(Person): pass is defined, what happens?', options: ['Student inherits from Person', 'Error: syntax invalid', 'Empty class', 'Person inherits from Student'], correctIndex: 0 },
 
-  { id: 29, prompt: 'What does f.flush() do?', options: ['Empties the file', 'Writes buffer to disk', 'Moves cursor to start', 'Deletes file handle'], correctIndex: 1 },
+  { id: 29, prompt: 'What is the purpose of __del__ method?', options: ['Called when object is destroyed', 'Called on printing object', 'Called on inheritance', 'Creates a destructor manually'], correctIndex: 0 },
 
-  { id: 30, prompt: 'Which command shows present directory in Windows CMD?', options: ['pwd', 'where', 'echo %cd%', 'dir'], correctIndex: 2 },
-
-  { id: 31, prompt: 'Opening binary file in "r" (text mode) may...', options: ['Work fine', 'Cause decode errors', 'Read as binary', 'Raise FileError'], correctIndex: 1 },
-
-  { id: 32, prompt: 'Which method writes list of strings at once?', options: ['f.writelines(list)', 'f.write(list)', 'f.append(list)', 'f.dump(list)'], correctIndex: 0 },
-
-  { id: 33, prompt: 'In Windows CMD, dir /s will...', options: ['Show only system files', 'List files in current and subfolders', 'Show hidden files', 'Delete files'], correctIndex: 1 },
-
-  { id: 34, prompt: '"rt" mode in open() means...', options: ['Read text (default)', 'Read truncated', 'Read temporary', 'Read tabular'], correctIndex: 0 },
-
-  { id: 35, prompt: 'What does f.tell() return in Python?', options: ['File size', 'Cursor position (byte offset)', 'Line number', 'Encoding type'], correctIndex: 1 },
-
-
-  { id: 36, prompt: 'What happens if you open a file with "w" and then immediately close it?', options: ['File deleted', 'File created/emptied', 'Nothing happens', 'Appended data lost'], correctIndex: 1 },
-
-  { id: 37, prompt: 'In Python, which method reads one line at a time but allows iteration?', options: ['f.read()', 'for line in f:', 'f.readlines()', 'f.scanlines()'], correctIndex: 1 },
-
-  { id: 38, prompt: 'What does os.path.exists("demo.txt") return if the file is missing?', options: ['None', 'False', 'Raises Error', 'True'], correctIndex: 1 },
-
-  { id: 39, prompt: 'Which open mode allows binary writing only?', options: ['wb', 'rb', 'ab', 'rt'], correctIndex: 0 },
-
-  { id: 40, prompt: 'In Windows CMD, what does del *.txt do?', options: ['Deletes all .txt files in folder', 'Deletes only hidden .txt files', 'Deletes txt files in subfolders too', 'Renames all .txt files'], correctIndex: 0 }
+  { id: 30, prompt: 'What is the main difference between __str__ and __repr__?', options: ['__str__ is user-friendly, __repr__ is developer/debugging', '__str__ is faster', 'They are identical', '__repr__ is only for inheritance'], correctIndex: 0 }
 ];
+
 
 
 
@@ -100,7 +80,7 @@ export default function QuizPage() {
   const [startedAt, setStartedAt] = useState(null);
   const [now, setNow] = useState(Date.now());
   const [showInfo, setShowInfo] = useState(false);
-  const durationSec = 1500; 
+  const durationSec = 900; 
 
   // timer
   useEffect(() => {
@@ -165,7 +145,7 @@ export default function QuizPage() {
           <main className="bg-[#121833] border border-indigo-900/50 rounded-2xl p-6">
             <h2 className="text-xl font-semibold">Welcome</h2>
             <p className="text-indigo-200/80 mt-2">
-              40 questions. You have <span className="font-semibold">20 minutes</span>.
+              30 questions. You have <span className="font-semibold">15 minutes</span>.
             </p>
             <div className="mt-4 grid gap-3">
               <input
