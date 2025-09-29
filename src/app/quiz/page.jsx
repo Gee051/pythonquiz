@@ -4,66 +4,117 @@ import { useEffect, useMemo, useState } from 'react';
 // ================= QUESTIONS =================
 
 const QUESTIONS = [
-  { id: 1,  prompt: 'Which keyword is used to define a class in Python?', options: ['object', 'class', 'def', 'method'], correctIndex: 1 },
+  { id: 1,  prompt: 'Which keyword defines a class in Python?', options: ['object', 'class', 'def', 'new'], correctIndex: 1 },
 
-  { id: 2,  prompt: 'What does the __init__ method do?', options: ['Deletes objects', 'Initializes new objects', 'Defines private variables', 'Creates a module'], correctIndex: 1 },
+  { id: 2,  prompt: 'Which file mode creates a new file and fails if it already exists?', options: ['w', 'a', 'x', 'r+'], correctIndex: 2 },
 
-  { id: 3,  prompt: 'In class methods, what does the self parameter represent?', options: ['The class itself', 'The parent class', 'The current object instance', 'The module'], correctIndex: 2 },
+  { id: 3,  prompt: 'Which built-in converts the string "42" to an integer 42?', options: ['str("42")', 'float("42")', 'int("42")', 'bool("42")'], correctIndex: 2 },
 
-  { id: 4,  prompt: 'Which is the correct way to define a Person class with a name attribute?', options: ['class Person: def __init__(name): self.name = name', 'class Person: def __init__(self, name): self.name = name', 'def Person(self, name): self.name = name', 'class Person(self, name): self.name = name'], correctIndex: 1 },
+  { id: 4,  prompt: 'Which of these is a valid Python naming?', options: ['first-name', '1stName', 'name_1', 'def'], correctIndex: 2 },
 
-  { id: 5,  prompt: 'What will print(type(Student)) output if Student is a class?', options: ["<class 'object'>", "<class 'Student'>", "'Student'", "'object'"], correctIndex: 0 },
+  { id: 5,  prompt: 'In a for–else loop, the else block runs when…', options: ['always', 'the loop did NOT break', 'a break occurred', 'an exception occurred'], correctIndex: 1 },
 
-  { id: 6,  prompt: 'What is an instance attribute?', options: ['A variable shared by all objects', 'A variable unique to each object', 'A constant in a class', 'A method'], correctIndex: 1 },
+  { id: 6,  prompt: 'list.append([4,5]) vs list.extend([4,5]) — which is correct?', options: ['Both add 4 and 5 as two items', 'append adds one list item; extend adds elements separately', 'extend adds one list item; append adds elements separately', 'Both replace the list'], correctIndex: 1 },
 
-  { id: 7,  prompt: 'What is a class attribute?', options: ['Variable shared by all instances of the class', 'Variable unique to one object', 'Only private attributes', 'A method inside the class'], correctIndex: 0 },
+  { id: 7, prompt: 'Access an instance attribute balance inside a method…', options: ['balance', 'self.balance', 'Account.balance', 'this.balance'], correctIndex: 1 },
 
-  { id: 8,  prompt: 'Which of these creates a private attribute?', options: ['balance', '_balance', '__balance', 'private balance'], correctIndex: 2 },
+  { id: 8,  prompt: 'What is list(zip([1,2,3],[10,20]))?', options: ['[(1,10),(2,20),(3,undefined)]', '[(1,10),(2,20)]', '[(1,10),(2,20),(3,None)]', 'Error: lengths must match'], correctIndex: 1 },
 
-  { id: 9,  prompt: 'What does encapsulation mean in OOP?', options: ['Hiding implementation details', 'Sharing variables across classes', 'Using multiple constructors', 'Defining functions outside a class'], correctIndex: 0 },
+  { id: 9,  prompt: 'nums=[3,1,2]; print(nums.sort(), nums) prints…', options: ['[1,2,3] [1,2,3]', 'None [1,2,3]', 'None None', '[3,1,2] [1,2,3]'], correctIndex: 1 },
 
-  { id: 10, prompt: 'Which special method is automatically called when printing an object?', options: ['__init__', '__print__', '__str__', '__start__'], correctIndex: 2 },
+  { id: 10, prompt: 'Which mode opens a file for reading BYTES?', options: ["'r'", "'rb'", "'rt'", "'r+'"], correctIndex: 1 },
 
-  { id: 11, prompt: 'Which special method is used to give a formal debug string representation?', options: ['__show__', '__debug__', '__repr__', '__str__'], correctIndex: 2 },
+  { id: 11, prompt: 'What does __init__ do in a class?', options: ['Deletes objects', 'Initializes new objects', 'Creates modules', 'Handles printing'], correctIndex: 1 },
 
-  { id: 12, prompt: 'What is inheritance in Python OOP?', options: ['Ability to hide variables', 'Creating new classes from existing ones', 'Overloading operators', 'Running multiple classes at once'], correctIndex: 1 },
+  { id: 12,  prompt: 'In class methods, what does the self parameter represent?', options: ['The class itself', 'The parent class', 'The current object instance', 'The module'], correctIndex: 2 },
 
-  { id: 13, prompt: 'Which function is used to call the parent class constructor?', options: ['base()', 'super()', 'parent()', 'extend()'], correctIndex: 1 },
+  { id: 13, prompt: 'Safely get a missing key from dict d without KeyError:', options: ['d.key', 'd["key"]', 'd.get("key")', 'get(d,"key")'], correctIndex: 2 },
 
-  { id: 14, prompt: 'What is method overriding?', options: ['Using the same variable in two classes', 'Child class redefining a parent class method', 'Calling methods with different names', 'Private method duplication'], correctIndex: 1 },
+  { id: 14, prompt: 'Fix the default mutable argument trap:', options: ['Use [] as default', 'Use None then create list inside', 'Use a global list', 'Use tuple instead of list always'], correctIndex: 1 },
 
-  { id: 15, prompt: 'Polymorphism in OOP means?', options: ['Same method name with different implementations', 'Hiding attributes', 'Multiple parent classes only', 'Static methods'], correctIndex: 0 },
+  { id: 15, prompt: 'Which statement is correct about "is" vs "=="?', options: ['"==" checks identity', '"is" checks identity', 'Both are identical', 'Neither works for ints'], correctIndex: 1 },
 
-  { id: 16, prompt: 'Which keyword defines a subclass from a parent?', options: ['extends', 'inherits', 'class Child(Parent)', 'superclass'], correctIndex: 2 },
+  { id: 16, prompt: 'enumerate(lst, start=1) does what?', options: ['Starts at 0', 'Starts at 1', 'Skips first item', 'Enumerates in reverse'], correctIndex: 1 },
 
-  { id: 17, prompt: 'What happens if a class has no __init__ method defined?', options: ['It cannot be instantiated', 'Python provides a default constructor', 'It raises an error', 'Attributes are auto-created'], correctIndex: 1 },
+  { id: 17, prompt: 'any([]) and all([]) evaluate to…', options: ['False and False', 'True and True', 'False and True', 'True and False'], correctIndex: 2 },
 
-  { id: 18, prompt: 'Which built-in function checks if an object is an instance of a class?', options: ['typeof()', 'classof()', 'isinstance()', 'object()'], correctIndex: 2 },
+  { id: 18, prompt: 'While–else: the else block executes when…', options: ['a break occurs', 'no break occurs', 'continue is used', 'an exception occurs'], correctIndex: 1 },
 
-  { id: 19, prompt: 'Which built-in function lists all attributes and methods of an object?', options: ['methods()', 'dir()', 'vars()', 'inspect()'], correctIndex: 1 },
+  { id: 19, prompt: 'Which function PARSES a string to datetime?', options: ['strftime', 'strptime', 'timefmt', 'dateparse'], correctIndex: 1 },
 
-  { id: 20, prompt: 'What will hasattr(obj, "name") return if obj has attribute name?', options: ['Error', 'False always', 'True', 'The attribute value'], correctIndex: 2 },
+  { id: 20, prompt: 'Correct structure of an if/elif/else chain?', options: ['if → else → elif', 'elif → if → else', 'if → elif → else', 'else → if → elif'], correctIndex: 2 },
 
-  { id: 21, prompt: 'What decorator is used for class-level methods that access cls?', options: ['@staticmethod', '@classmethod', '@class', '@property'], correctIndex: 1 },
+  { id: 21, prompt: 'Get current working directory:', options: ['os.cwd()', 'os.curdir()', 'os.getcwd()', 'path.cwd'], correctIndex: 2 },
 
-  { id: 22, prompt: 'Which decorator makes a method belong to the class but not access self or cls?', options: ['@staticmethod', '@classmethod', '@property', '@method'], correctIndex: 0 },
+  { id: 22, prompt: 'with open(...) as f: guarantees…', options: ['faster I/O', 'automatic closing even on errors', 'type checking', 'thread safety'], correctIndex: 1 },
 
-  { id: 23, prompt: 'What does @property decorator do?', options: ['Makes a method behave like an attribute', 'Makes an attribute private', 'Defines a static method', 'Overloads operators'], correctIndex: 0 },
+  { id: 23, prompt: 'Read an entire text file into one string:', options: ['f.readline()', 'f.read()', 'f.readlines()', 'next(f)'], correctIndex: 1 },
 
-  { id: 24, prompt: 'Multiple inheritance in Python is resolved using?', options: ['Order of definition only', 'Method Resolution Order (MRO)', 'Parent class priority', 'Alphabetical order'], correctIndex: 1 },
+  { id: 24, prompt: 'Which mode both APPENDS and allows READING?', options: ["'a+'", "'w+'", "'r+'", "'x+'"], correctIndex: 0 },
 
-  { id: 25, prompt: 'Which dunder method checks equality with == ?', options: ['__eq__', '__cmp__', '__same__', '__equal__'], correctIndex: 0 },
+  { id: 25, prompt: 'After f.read(), the file pointer is typically at…', options: ['start', 'middle', 'end of file', 'random spot'], correctIndex: 2 },
 
-  { id: 26, prompt: 'What is composition in OOP?', options: ['Using multiple parent classes', 'A class containing objects of other classes', 'Child overriding parent', 'Sharing class attributes'], correctIndex: 1 },
+  { id: 26, prompt: 'In strings, "\\n" represents…', options: ['Tab', 'Newline', 'Backslash-n', 'Space'], correctIndex: 1 },
 
-  { id: 27, prompt: 'What does super() return inside a child class?', options: ['A reference to parent class', 'The current object', 'A private attribute', 'The module name'], correctIndex: 0 },
+  { id: 27, prompt: '"Python"[1:4] evaluates to…', options: ['Pyt', 'yth', 'ytho', 'Pyth'], correctIndex: 1 },
 
-  { id: 28, prompt: 'If class Student(Person): pass is defined, what happens?', options: ['Student inherits from Person', 'Error: syntax invalid', 'Empty class', 'Person inherits from Student'], correctIndex: 0 },
+  { id: 28, prompt: 'Why does t=([1,2],3); t[0].append(7) change the tuple content?', options: ['Tuples are mutable', 'List inside the tuple is mutable', 'append makes a new tuple', 'Python bug'], correctIndex: 1 },
 
-  { id: 29, prompt: 'What is the purpose of __del__ method?', options: ['Called when object is destroyed', 'Called on printing object', 'Called on inheritance', 'Creates a destructor manually'], correctIndex: 0 },
+  { id: 29, prompt: 'Why can’t a list be a set element?', options: ['Lists are unhashable', 'Sets accept only numbers', 'Tuples are slower', 'Lists are immutable'], correctIndex: 0 },
 
-  { id: 30, prompt: 'What is the main difference between __str__ and __repr__?', options: ['__str__ is user-friendly, __repr__ is developer/debugging', '__str__ is faster', 'They are identical', '__repr__ is only for inheritance'], correctIndex: 0 }
+  { id: 30, prompt: 'In Python 3.7+, dicts preserve…', options: ['alphabetical key order', 'insertion order', 'random order', 'value order'], correctIndex: 1 },
+
+  { id: 31, prompt: 'Which slice reverses a list?', options: ['lst[::-1]', 'lst[::-2]', 'lst[1:]', 'reversed(lst) returns a list'], correctIndex: 0 },
+
+  { id: 32, prompt: '*args collects…', options: ['positional extras into a tuple', 'keyword extras into a dict', 'type hints', 'default args'], correctIndex: 0 },
+
+  { id: 33, prompt: '**kwargs collects…', options: ['positional extras', 'keyword extras into a dict', 'local variables', 'environment vars'], correctIndex: 1 },
+
+  { id: 34, prompt: 'Python’s typing is best described as…', options: ['Static & strong', 'Dynamic & strong', 'Static & weak', 'Dynamic & weak'], correctIndex: 1 },
+
+  { id: 35, prompt: 'x=[[]]*3; x[0].append(1); print(x) results in…', options: ['[[1],[],[]]', '[[1],[1],[1]]', '[[],[],[1]]', 'TypeError'], correctIndex: 1 },
+
+  { id: 36, prompt: 'Sort students by grade desc, then name asc:', options: [
+      "sorted(stu, key=lambda s:(-s['g'], s['n']))",
+      "sorted(stu, key=lambda s:(s['g'], s['n']))",
+      "stu.sort(key='g')",
+      "sorted(stu, reverse=True)"
+    ], correctIndex: 0 },
+
+  { id: 37, prompt: '@property is used to…', options: ['create a classmethod', 'expose a computed/controlled attribute', 'allocate memory faster', 'hide methods from dir()'], correctIndex: 1 },
+
+  { id: 38, prompt: 'Name mangling happens for attributes named…', options: ['_attr', '__attr', 'attr__', '__attr__'], correctIndex: 1 },
+
+  { id: 39, prompt: 'MRO: If B.speak→"B", C(B).speak→"C", then D(C,B).speak() returns…', options: ['B', 'C', 'D', 'Error'], correctIndex: 1 },
+
+  { id: 40, prompt: 'class A: x=10; a1=A(); a2=A(); a1.x=99; print(A.x, a1.x, a2.x) →', options: ['10 99 10', '99 99 10', '99 99 99', '10 10 10'], correctIndex: 0 },
+
+  { id: 41, prompt: 'In try/except/else/finally, the else runs…', options: ['only if no exception occurred', 'always', 'only if except ran', 'never'], correctIndex: 0 },
+
+  { id: 42, prompt: 'Inside except, which preserves the original traceback best?', options: ['raise', 'raise e', 'both same', 'neither'], correctIndex: 0 },
+
+  { id: 43, prompt: 'On Windows CSV, use newline="" with csv.writer to avoid…', options: ['slow writes', 'extra blank lines', 'encoding errors', 'file locks'], correctIndex: 1 },
+
+  { id: 44, prompt: 'Open for reading & writing WITHOUT truncating (file must exist):', options: ["'w+'", "'r+'", "'a+'", "'x'"], correctIndex: 1 },
+
+  { id: 45, prompt: 'strftime: format 27/09 06:05 from datetime(2025,9,27,6,5)', options: ['"%d/%m %H:%M"', '"%m/%d %H:%M"', '"%d-%m %I:%M %p"', '"%Y/%m/%d %H:%S"'], correctIndex: 0 },
+
+  { id: 46, prompt: 'Passing Dog and Robot to a function that calls obj.speak() works due to…', options: ['inheritance only', 'duck typing / polymorphism', 'macros', 'operator overloading'], correctIndex: 1 },
+
+  { id: 47, prompt: 'Format a float with 2 decimal places using f-strings:', options: ['f"{x:.2f}"', 'f"{x:2d}"', 'f"{x:%2}"', 'format(x,"2f")'], correctIndex: 0 },
+
+  { id: 48, prompt: '(0.1 + 0.2) == 0.3 is often False because…', options: ['Division by zero', 'Binary floating precision', 'Python bug', 'Locale settings'], correctIndex: 1 },
+
+  { id: 49, prompt: 'Which while loop runs exactly 3 times (0,1,2)?', options: [
+      'i=0; while i<3: i+=1',
+      'i=1; while i<=3: i+=1',
+      'while i<3: print(i)',
+      'for i in while(3): pass'
+    ], correctIndex: 0 },
+
+  { id: 50, prompt: 'Which file mode truncates the file on open if it exists?', options: ["'r'", "'w'", "'a'", "'r+'"], correctIndex: 1 },
 ];
+
 
 
 
@@ -80,7 +131,7 @@ export default function QuizPage() {
   const [startedAt, setStartedAt] = useState(null);
   const [now, setNow] = useState(Date.now());
   const [showInfo, setShowInfo] = useState(false);
-  const durationSec = 900; 
+  const durationSec = 1500; 
 
   // timer
   useEffect(() => {
@@ -145,7 +196,7 @@ export default function QuizPage() {
           <main className="bg-[#121833] border border-indigo-900/50 rounded-2xl p-6">
             <h2 className="text-xl font-semibold">Welcome</h2>
             <p className="text-indigo-200/80 mt-2">
-              30 questions. You have <span className="font-semibold">15 minutes</span>.
+              50 questions. You have <span className="font-semibold">25 minutes</span>.
             </p>
             <div className="mt-4 grid gap-3">
               <input
